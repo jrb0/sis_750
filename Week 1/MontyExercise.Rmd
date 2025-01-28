@@ -1,0 +1,62 @@
+---
+title: "Monty Hall Exercise"
+author: "Jonathan Bachrach"
+date: "2025-01-16"
+output: pdf_document
+--- 
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set( 
+  echo = TRUE, #do you want to show the code?
+  eval = TRUE, #do you want to actually run the code?
+  fig.align = 'center', #align charts
+  message = FALSE, #do you want to show error and warning messages?
+  warning = FALSE
+)
+
+  library(tidyverse)
+  library(knitr)
+```
+
+1. See the text of my Monty Hall simulation below.
+
+```{r}
+doors <- c('A', 'B', 'C')
+
+# create our scorecard
+results <- tibble(
+  trial = 1:10000,
+  winner = NA
+)
+
+car <- sample(doors, 1) 
+choice <- sample(doors, 1) 
+reveal <- sample(doors[doors != car & doors != choice], 1)
+switch <- sample(doors[doors != reveal & doors != choice], 1)
+
+results[1, 'winner'] <- if_else(car == switch, 'Marilyn', 'Paul')
+
+for(i in 1:10000){
+  car <- sample(doors, 1)
+  choice <- sample(doors, 1) 
+  reveal <- sample(doors[doors != car & doors != choice], 1)
+  switch <- sample(doors[doors != reveal & doors != choice], 1)
+  
+  results[i, 'winner'] <- if_else(car == switch, 'Marilyn', 'Paul')
+}
+
+
+```
+
+2. See the table below for the frequency of Marilyn's win.
+
+```{r}
+results %>%
+  count(winner) %>% #equivalent to count(results, winner)
+  kable(caption = 'Results of Simulation') #knitr function that creates a nice table
+```
+
+3. Stuff
+
+4. Marilyn is right. You win about twice as often when you switch. In our simulation, switching doors won the car 'r filter(results, winner == "Marilyn" %>% nrow()' times.
+
